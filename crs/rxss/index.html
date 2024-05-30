@@ -1,0 +1,27 @@
+<html>
+<head>
+    <title>XSS Demo</title>
+</head>
+<body>
+    <h1>XSS Demo</h1>
+    <form>
+        <input type="text" id="name" name="name" placeholder="Enter your name">
+        <button type="submit">Submit</button>
+    </form>
+    <div id="output"></div>
+
+    <script>
+        // Get the input value from the form
+        const form = document.querySelector('form');
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+
+            // Execute the input value as JavaScript code
+            const script = document.createElement('script');
+            script.text = name.replace(/<\/?script>/g, ''); // Remove <script> tags
+            document.body.appendChild(script);
+        });
+    </script>
+</body>
+</html>

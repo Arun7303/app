@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fake Web App - Stored XSS Example</title>
+</head>
+<body>
+    <h1>Leave a Comment</h1>
+    <form id="commentForm">
+        <label for="comment">Comment:</label>
+        <input type="text" id="comment" name="comment" required>
+        <button type="submit">Submit</button>
+    </form>
+    <h2>Comments</h2>
+    <div id="commentsSection"></div>
+
+    <script>
+        // Load and display comments from local storage when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            displayComments();
+        });
+
+        // Handle form submission
+        document.getElementById('commentForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            let comment = document.getElementById('comment').value;
+            saveComment(comment);
+            displayComments();
+            document.getElementById('commentForm').reset();
+        });
+
+        // Save comment to local storage
+        function saveComment(comment) {
+            let comments = JSON.parse(localStorage.getItem('comments')) || [];
+            comments.push(comment);
+            localStorage.setItem('comments', JSON.stringify(comments));
+        }
+
+        // Display comments from local storage
+        function displayComments() {
+            let commentsSection = document.getElementById('commentsSection');
+            commentsSection.innerHTML = '';
+            let comments = JSON.parse(localStorage.getItem('comments')) || [];
+            comments.forEach(comment => {
+                let p = document.createElement('p');
+                p.innerHTML = comment;
+                commentsSection.appendChild(p);
+            });
+        }
+    </script>
+</body>
+</html>
